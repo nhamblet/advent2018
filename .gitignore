@@ -1,0 +1,7 @@
+*.pdf
+*~
+*.swp
+*.hi
+*.o
+**/.stack-work
+
