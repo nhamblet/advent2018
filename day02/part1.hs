@@ -13,13 +13,9 @@ import Data.List.Unique (count) -- from Unique
 -- given a string, does it count toward the 'duplicate' or 'triples'?
 countsToward :: String -> (Bool, Bool)
 countsToward xs =
-  let xc = count xs -- count, from Unique, has type [a] -> [(a, Int)]
-
-      countIs :: Int -> (Char, Int) -> Bool -- simple filter on the snd
-      countIs n (c, h) = n == h
-
-      hasDupe = any (countIs 2) xc
-      hasTriple = any (countIs 3) xc
+  let xc        = count xs -- count, from Unique, has type [a] -> [(a, Int)]
+      hasDupe   = any ((==2) . snd) xc
+      hasTriple = any ((==3) . snd) xc
   in
     (hasDupe, hasTriple)
 
@@ -30,8 +26,8 @@ countsToward xs =
 checksum :: [String] -> Int
 checksum xs = numDupe * numTriple
   where
-    xcs = fmap countsToward xs
-    numDupe = length $ filter fst xcs
+    xcs       = fmap countsToward xs
+    numDupe   = length $ filter fst xcs
     numTriple = length $ filter snd xcs
 
 
