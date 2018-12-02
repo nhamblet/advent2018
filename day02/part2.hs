@@ -9,19 +9,12 @@ pairs :: Eq a => [a] -> [(a,a)]
 pairs xs = [(a,b) | a <- xs , b <- xs , a /= b]
 
 
--- given two strings (assumed to be of the same length),
--- how many characters are they different by?
-charactersDifferent :: String -> String -> Int
-charactersDifferent [] [] = 0
-charactersDifferent (a:as) (b:bs)
-  | a == b    = charactersDifferent as bs
-  | otherwise = 1 + (charactersDifferent as bs)
-
-
 -- given a list of strings, find the pair that are only off by one character
 offByOnePair :: [String] -> (String, String)
 offByOnePair xs =
-  head $ filter (\p -> 1 == (charactersDifferent (fst p) (snd p))) $ pairs xs
+  head $ filter ffunc $ pairs xs
+  where ffunc :: (String, String) -> Bool
+        ffunc (a,b) = (length a) - 1 == length (commonChars a b)
 
 
 -- given two strings, find the common characters
