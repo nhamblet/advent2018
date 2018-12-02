@@ -8,6 +8,15 @@ three times, and multiply those counts together.
 
 [My solution](part1.hs)
 
+#### Lessons learned
+
+* I still haven't used `let` in the right ways, most of the times I've done it.
+    Today, I thought I could put a `let` in the body of a `where`, but apparently
+    that's a no-no.
+* I looked on [hoogle](https://www.haskell.org/hoogle/) for what ended up being
+    the `count` function from `Unique`, and was surprised not to find it. I think
+    I dug up some other stackoverflow or something to actually find it.
+
 
 ### Part 2
 
