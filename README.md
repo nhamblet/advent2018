@@ -6,4 +6,5 @@ solutions in haskell.
 
 * [Day 1: Chronal Calibration](day01)
 * [Day 2: Inventory Management System](day02)
+* [Day 3: No Matter How You Slice It](day03)
 
