@@ -6,6 +6,14 @@ was only a few lines different than part 1.
 
 [My solution](day.hs)
 
+I changed up the overall pattern, relative to the earlier days, particularly around
+having a `main`. That has seemed to be an extra, un-necessary step, and I've just
+started hard-coding paths. It's also fun to write each piece of the solution as you
+work through it, and then at the end tie them all together with a large function
+composition. What I might try, if I think about it right next time, is actually
+writing that composition first, as I write the method signatures, and then go back
+and fill in the definitions.
+
 ### Commentary
 
 I got both parts wrong on my first try, but was able to diagnose my error by trying
