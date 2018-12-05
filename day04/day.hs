@@ -1,5 +1,8 @@
+-- note that this file has a few hard-coded paths in it (e.g., input1 and /tmp/4.1)
+
 module Day4 where
 
+-- trying to be better about specific inputs, plus this shows the methods I looked up
 import Data.List (sort)
 import Text.Regex (matchRegex, mkRegex)
 import qualified Data.Map as M (Map, empty, insert, findWithDefault, toList)
@@ -8,19 +11,24 @@ import Data.Tuple (swap)
 import GHC.Exts (sortWith)
 
 
+-- I want to sort lines based on their date
+-- I could auto-derive Ord from StatementLine, but that takes the data constructor name
+-- into account.
+--
+-- I also found `sortWith` after writing all this, and it probably would have been easier :)
 data SimpleTime = YMDHM Int Int Int Int Int deriving (Eq, Show, Ord)
-
 
 class Dated d where
   date :: d -> SimpleTime
 
 
--- Wakeup and Asleep data doesn't need the hour, it's always 0,
--- but we leave it because it makes sorting easier
+-- This data type captures the raw data on the input lines. Note, in particular, that
+-- the wakeup and asleep lines don't know the guard they apply to, we have to sort by
+-- the dates first. Also note that Wakeup and Asleep data doesn't need the hour, it's always 0
 data StatementLine =
-    NewGuardLine Int Int Int Int Int String -- Year Month Day Hour Minute Id
-  | WakeUpLine Int Int Int Int              -- Year Month Day Minute
-  | FallAsleepLine Int Int Int Int          -- Year Month Day Minute
+    NewGuardLine   Int Int Int Int Int String -- Year Month Day Hour Minute Id
+  | WakeUpLine     Int Int Int Int            -- Year Month Day Minute
+  | FallAsleepLine Int Int Int Int            -- Year Month Day Minute
   deriving (Eq, Show)
 
 
@@ -33,6 +41,8 @@ instance Dated StatementLine where
 instance Ord StatementLine where
   compare sl sl' = compare (date sl) (date sl')
 
+
+-- whoo! here's some ugly string munging!
 
 dateRegex     = "\\[([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+)\\] "
 newGuardRegex = mkRegex $ dateRegex ++ "Guard #([^\\ ]+) begins shift"
@@ -58,6 +68,10 @@ mkStatementLine s =
         Just asleepMatch -> mkAsleep asleepMatch
         -- partial function, to fail at runtime if we didn't parse correctly
 
+
+
+-- some test data to play with. input1 is the data in the problem writeup,
+-- the `.shuf` version is a version I shuffled to test my sorting
 
 givenLines :: IO [StatementLine]
 givenLines = do
@@ -93,10 +107,19 @@ mkEvent id (WakeUpLine y m d mm)         = (Wakeup y m d mm id, id)
 mkEvent id (FallAsleepLine y m d mm)     = (Asleep y m d mm id, id)
 
 
+-- Intuitively, I want to walk through the given statements (in sorted order),
+-- keeping track of the last guard the came on duty, so I can pass it as the first
+-- argument to mkEvent to convert the StatementLine to a GuardEvent. While I'm at it,
+-- I also have to keep track of the new guard id, when such a thing occurs.
 toEvents :: [StatementLine] -> [GuardEvent]
+-- this fake data for the start of the scanl is ugly, and I thought I could try `undefined`, but
+-- I think since it's a scanl it forces that first value. perhaps with the drop1 it would be ok again,
+-- I added that after getting it to work with the terrible fake value
 toEvents ss = drop 1 $ fmap fst $ scanl eventFolder (NewGuard (-1) (-1) (-1) (-1) (-1) "", "") (sort ss)
   where
     eventFolder :: (GuardEvent, String) -> StatementLine -> (GuardEvent, String)
+    -- the type signature here is convenient for scanl, but we don't actually use the
+    -- GuardEvent in the first tuple
     eventFolder = mkEvent . snd
 
 
@@ -109,22 +132,35 @@ toEvents ss = drop 1 $ fmap fst $ scanl eventFolder (NewGuard (-1) (-1) (-1) (-1
 sleepAmounts :: [GuardEvent] -> M.Map String [(Int, Int)]
 sleepAmounts es = fst $ foldl eventFolder (M.empty, 0) es
   where
+    -- we're going to track all the intervals each guard was asleep, as well as the minute of the last event
+    -- that way, when we get to an 'Awake' event, we can grab the minute of the last event, assume it was an
+    -- `Asleep`, and then add that interval to the current guard's list of nap intervals
     eventFolder :: (M.Map String [(Int, Int)], Int) -> GuardEvent -> (M.Map String [(Int, Int)], Int)
+    -- now that we have guards associated with all events, we don't actually care about the NewGuard events
     eventFolder (map, _)       (NewGuard _ _ _ _ mm  _)  = (map, mm)
     eventFolder (map, _)       (Asleep   _ _ _   mm id) = (map, mm)
     eventFolder (map, lastMin) (Wakeup   _ _ _   mm id) = (M.insert id tot map, mm)
       where tot = (lastMin, mm) : (M.findWithDefault [] id map)
 
 
--- find the total time asleep, and the minute asleep the most
+-- Find the total time asleep, and the minute asleep the most.
+-- This function is basically one guard at a time, from the output of sleepAmounts,
+-- and you can `fmap` it to lift it up to apply to all the guards in the M.Map
 sleepStats :: [(Int,Int)] -> (Int, Int)
 sleepStats ses = (totalMinutes, mostMinute)
   where
-    allMinutes = concat [[s..(e-1)] | (s,e) <- ses]
+    allMinutes = concat [[s..(e-1)] | (s,e) <- ses] -- sort of the same track as in day 3,
+                                                    -- list all the values and then gather them up again later
     totalMinutes = length allMinutes
     mostMinute = snd $ head $ reverse $ sort $ fmap swap $ count allMinutes
 
 
+-- Now, given a scoring statistic for each guard, and the minute associated with that statistic,
+-- find the guard, and minute, with the highest value of the statistic
+--
+-- Originally this was only written for part 1, where the statistic is the total time the guard sleeps,
+-- but then once I got to part 2, I found that it worked for it also, where the statistic is the number of
+-- times the guard is asleep at the minute.
 targetGuard :: M.Map String (Int, Int) -> (String, Int)
 targetGuard m = (k, minute)
   where
@@ -140,10 +176,11 @@ convertAnswer :: (String, Int) -> Int
 convertAnswer (s,i) = (read s :: Int) * i
 
 
+-- "convenience" method to string together all the steps above
 part1 :: [String] -> Int
 part1 ss = convertAnswer $ targetGuard $ fmap sleepStats $ sleepAmounts $ toEvents $ fmap mkStatementLine ss
 
-
+-- and then wrap it in IO for an input file
 doPart1 = do
   content <- readFile "/tmp/4.1"
   putStrLn $ show $ part1 $ lines content
@@ -151,8 +188,6 @@ doPart1 = do
 
 
 -- part 2
--- first pass: 19914, apparently too low
-
 -- find the guard/minute pair where the guard is asleep the most that minute
 
 -- we already have the [(Int, Int)] for each guard, just want to re-process it
@@ -166,6 +201,8 @@ secondSleepStats ses = ans
     ans          = swap $ head $ reverse $ sortWith snd minuteCounts
 
 
+-- convenience and IO functions as in part 1, the only difference here is we
+-- fmap secondSleepStats, instead of sleepStats
 part2 :: [String] -> Int
 part2 ss = convertAnswer $ targetGuard $ fmap secondSleepStats $ sleepAmounts $ toEvents $ fmap mkStatementLine ss
 
