@@ -77,6 +77,13 @@ foldClaims :: [Claim] -> Matrix Int
 foldClaims cs = foldl updateClaims (zero 5 5) cs
 
 
+-- this gets killed, on my laptop, after 10 minutes of churning and 6G memory
+mainBad = do
+  args <- getArgs
+  content <- readFile $ args !! 0
+  putStrLn $ show $ numConflicts $ foldClaims $ catMaybes $ fmap parseClaim (lines content)
+
+
 -- Attempt 2, ended up giving the wrong answer
 
 
@@ -112,8 +119,20 @@ toClaims :: [String] -> [Claim]
 toClaims ss = catMaybes $ fmap parseClaim ss
 
 
--- Attempt 3, not sure if this will ever finish running
+-- answer is low, but took 20 minutes to compute anyway
+-- answer was 104621
+mainWrongSlow = do
+  args <- getArgs
+  content <- readFile $ args !! 0
+  putStrLn $ show $ finalAnswer2 (lines content)
 
+
+-- Attempt 3, slow, but at least it is correct
+
+main3 = do
+  args <- getArgs
+  content <- readFile $ args !! 0
+  putStrLn $ show $ finalAnswer3 (lines content)
 
 finalAnswer3 :: [String] -> Int
 finalAnswer3 ls = rollup $ toClaims ls
@@ -123,9 +142,6 @@ finalAnswer3 ls = rollup $ toClaims ls
 -- we also build up the count of coordinates touched more than once.
 -- by the time we're done looping through the claims, we have our final
 -- count of conflicting cells.
---
--- i still haven't found why this didn't produce the right answer,
--- but it was too low
 rollup :: [Claim] -> Int
 rollup cs = snd $ foldl go (zero nr nc, 0) cs
   where
@@ -142,7 +158,7 @@ indices :: Claim -> [(Int, Int)]
 indices (Claim _ (Offset l t) (Size w h)) = [(r,c) | r <- [(t+1)..(t+h)], c <- [(l+1)..(l+w)]]
 
 
--- Attempt 4, finally works!
+-- Attempt 4, finally works and isn't terribly slow
 
 
 -- given a bunch of claims, we just write down the coordinates they hit,
@@ -172,28 +188,6 @@ isIsolated m c = all (==1) $ fmap (\k -> M.findWithDefault 0 k m) (indices c)
 
 findIsolated :: [Claim] -> Claim
 findIsolated cs = head $ filter (isIsolated $ countMap cs) cs
-
-
--- this gets killed, on my laptop, after 10 minutes of churning and 6G memory
-mainBad = do
-  args <- getArgs
-  content <- readFile $ args !! 0
-  putStrLn $ show $ numConflicts $ foldClaims $ catMaybes $ fmap parseClaim (lines content)
-
-
--- answer is low, but took 20 minutes to compute anyway
--- answer was 104621
-mainWrongSlow = do
-  args <- getArgs
-  content <- readFile $ args !! 0
-  putStrLn $ show $ finalAnswer2 (lines content)
-
-
--- ran all night without producing an answer
-mainWayTooSlow = do
-  args <- getArgs
-  content <- readFile $ args !! 0
-  putStrLn $ show $ finalAnswer3 (lines content)
 
 
 main = do
