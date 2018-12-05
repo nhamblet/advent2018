@@ -1,7 +1,8 @@
 ## Day 3: No Matter How You Slice It
 
 I struggled on the first part of this one, but learned some things, and was eventually
-able to get both parts.
+able to get both parts. Some of the narrative below isn't quite right, because the
+rollup-based attempt 3 actually does work, it's just slow (but not all-night slow).
 
 [My solution](day3.hs)
 
