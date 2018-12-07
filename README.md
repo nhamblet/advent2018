@@ -9,4 +9,5 @@ solutions in haskell.
 * [Day 3: No Matter How You Slice It](day03)
 * [Day 4: Repose Record](day04)
 * [Day 5: Alchemical Reduction](day05)
+* [Day 6: Chronal Coordinates](day06)
 
