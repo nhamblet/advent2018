@@ -12,4 +12,5 @@ solutions in haskell.
 * [Day 6: Chronal Coordinates](day06)
 * [Day 7: The Sum of Its Parts](day07)
 * [Day 8: Memory Maneuver](day08)
+* [Day 9: Marble Mania](day09)
 
