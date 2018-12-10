@@ -1,4 +1,4 @@
-## Day 4: Repose Record
+## Day 4: [Repose Record](problem.md)
 
 Fun day. Played with some data modeling (and definitely didn't get it really nice,
 but it did work), and some folding. I was happy to find that the solution for part 2

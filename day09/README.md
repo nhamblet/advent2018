@@ -1,4 +1,4 @@
-## Day 9: Marble Mania
+## Day 9: [Marble Mania](problem.md)
 
 Today was fun. I pondered for a bit in how to represent the game state,
 because circular data structures are like that. I decided to try something like the

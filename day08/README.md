@@ -1,4 +1,4 @@
-## Day 8: Memory Maneuver
+## Day 8: [Memory Maneuver](problem.md)
 
 Today we parse a list of ints into a tree structure, and then
 evaluate the value of a node in the tree based on the value of its children.

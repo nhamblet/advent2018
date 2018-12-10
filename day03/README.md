@@ -1,4 +1,4 @@
-## Day 3: No Matter How You Slice It
+## Day 3: [No Matter How You Slice It](problem.md)
 
 I struggled on the first part of this one, but learned some things, and was eventually
 able to get both parts. Some of the narrative below isn't quite right, because the

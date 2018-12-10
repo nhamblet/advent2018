@@ -1,4 +1,4 @@
-## Day 5: Alchemical Reduction
+## Day 5: [Alchemical Reduction](problem.md)
 
 I had fun with this one. I had stayed up late doing day 4, right up until almost
 midnight, so decided to stay up to at least read the problem. I figured it should be
