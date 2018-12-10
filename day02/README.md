@@ -1,4 +1,4 @@
-## Day 2: Inventory Management System
+## Day 2: [Inventory Management System](problem.md)
 
 ### Part 1
 

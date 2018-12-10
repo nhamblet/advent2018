@@ -1,4 +1,4 @@
-## Day 7: The Sum of Its Parts
+## Day 7: [The Sum of Its Parts](problem.md)
 
 In the first part of this problem, we are given a dependency graph, and need to
 identify an order-preserving way to walk through the graph. It took me a little

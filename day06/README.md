@@ -1,4 +1,4 @@
-## Day 6: Chronal Coordinates
+## Day 6: [Chronal Coordinates](problem.md)
 
 Another fun day, no surprise really. I'm starting to get a little more familiar
 with some of the functions I keep looking to use. I feel like I've got a small handful
