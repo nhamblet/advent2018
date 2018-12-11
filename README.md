@@ -14,4 +14,5 @@ problem inputs aren't checked in, except where they fit easily in a line of sour
 * [Day 7: The Sum of Its Parts](day07)
 * [Day 8: Memory Maneuver](day08)
 * [Day 9: Marble Mania](day09)
+* [Day 10: The Stars Align](day10)
 
