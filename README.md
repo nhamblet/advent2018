@@ -1,9 +1,15 @@
 ## Advent of Code 2018
 
 These are my solutions to [Advent of Code 2018](https://adventofcode.com/2018) exercises.
-Hopefully I'll actually do a handful of the problems, but we'll see. I'll be doing my
-solutions in haskell. Each day has the problem statement in it, for convenience. My assigned
-problem inputs aren't checked in, except where they fit easily in a line of source code.
+I'm using them as an excuse to play more with haskell, having been
+[working through](https://github.com/sumidiot/haskellbook) the
+[Haskell Book](http://haskellbook.com/) this year also. My assigned problem inputs generally
+aren't checked in.
+
+I made it through day 11 reasonably strongly, wasn't too crazy about my work in day 12,
+didn't get part 1 debugged for day 13, and couldn't make vectors work well in day 14, so
+sorta ran out of steam at that point. I'm considering going back through the problems
+that I got to throughout next year, to keep learning more things in Haskell, but we'll see.
 
 * [Day 1: Chronal Calibration](day01)
 * [Day 2: Inventory Management System](day02)
