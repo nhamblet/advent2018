@@ -17,4 +17,5 @@ problem inputs aren't checked in, except where they fit easily in a line of sour
 * [Day 10: The Stars Align](day10)
 * [Day 11: Chronal Charge](day11)
 * [Day 12: Subterranean Sustainability](day12)
+* [Day 13: Mine Cart Madness](day13)
 
